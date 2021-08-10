@@ -14,7 +14,7 @@ namespace BlogApp.Shared.Services.Concrete
     public class CategoryService:ICategoryService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+             private readonly IMapper _mapper;
 
         public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -42,10 +42,10 @@ namespace BlogApp.Shared.Services.Concrete
             throw new NotImplementedException();
         }
 
-        public async Task<List<CategoryDto>> GetAllAsync()
+        public async Task<IList<CategoryDto>> GetAllAsync()
         {
-            var categories =  await _unitOfWork.Categories.GetAllAsync(null);
-           return  _mapper.Map<List<Category>, List<CategoryDto>>(categories);
+            var categories = await _unitOfWork.Categories.GetAllAsync(null);
+            return _mapper.Map<IList<Category>, IList<CategoryDto>>(categories);
         }
 
         public Task<CategoryListDto> GetAllByActiveAsync()

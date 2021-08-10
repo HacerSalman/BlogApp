@@ -1,6 +1,13 @@
+using BlogApp.Data.Context;
+using BlogApp.Services.AutoMapper.Profiles;
+using BlogApp.Shared.Abstract;
+using BlogApp.Shared.Services.Abstract;
+using BlogApp.Shared.Services.Concrete;
+using BlogApp.Shared.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +30,14 @@ namespace BlogApp.Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+            var connString = Environment.GetEnvironmentVariable("BLOG_APP_DB_CONNECTION");
+            ServerVersion sv = MySqlServerVersion.AutoDetect(connString);
+            services.AddDbContext<BlogAppDbContext>(options => options.UseMySql(connString,sv), ServiceLifetime.Scoped);
             services.AddRazorPages();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +63,12 @@ namespace BlogApp.Mvc
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapAreaControllerRoute(
+                    name: "Admin",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
+                );
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

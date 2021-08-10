@@ -12,7 +12,7 @@ namespace BlogApp.Shared.Services.Abstract
     {
         Task<CategoryDto> GetAsync(int categoryId);
         Task<CategoryUpdateDto> GetCategoryUpdateDtoAsync(int categoryId);
-        Task<List<CategoryDto>> GetAllAsync();
+        Task<IList<CategoryDto>> GetAllAsync();
         Task<CategoryListDto> GetAllByActiveAsync();
     
         Task<CategoryDto> AddAsync(CategoryAddDto categoryAddDto,string createdByName);
