@@ -8,13 +8,15 @@ using BlogApp.Shared.Abstract;
 using BlogApp.Shared.Dtos;
 using BlogApp.Shared.Services.Abstract;
 using BlogApp.Data.Entities;
+using BlogApp.Data.Enums;
+using BlogApp.Shared.Response;
 
 namespace BlogApp.Shared.Services.Concrete
 {
-    public class CategoryService:ICategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly IUnitOfWork _unitOfWork;
-             private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -22,24 +24,35 @@ namespace BlogApp.Shared.Services.Concrete
             _mapper = mapper;
         }
 
-        public Task<CategoryDto> AddAsync(CategoryAddDto categoryAddDto, string createdByName)
+        public async Task<CategoryDto> AddAsync(CategoryAddDto categoryAddDto, string createdByName)
         {
-            throw new NotImplementedException();
+            var category = _mapper.Map<CategoryAddDto, Category>(categoryAddDto);
+            category.Modifier = createdByName;
+            category.Owner = createdByName;
+            var result = await _unitOfWork.Categories.AddAsync(category);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<Category, CategoryDto>(result);
         }
 
-        public Task<int> CountAsync()
+        public async Task<int> CountAsync()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Categories.CountAsync();
         }
 
-        public Task<int> CountByNonDeletedAsync()
+        public async Task<int> CountByActiveAsync()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Categories.CountAsync(_ => _.Status == EntityStatus.Values.ACTIVE );
         }
 
-        public Task<CategoryDto> DeleteAsync(int categoryId, string modifiedByName)
+
+        public async Task<CategoryDto> DeleteAsync(int categoryId, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var category = await _unitOfWork.Categories.GetById(categoryId);         
+            category.Modifier = modifiedByName;
+            category.Status = EntityStatus.Values.DELETED;
+            var result = await _unitOfWork.Categories.UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<Category, CategoryDto>(result);
         }
 
         public async Task<IList<CategoryDto>> GetAllAsync()
@@ -48,24 +61,25 @@ namespace BlogApp.Shared.Services.Concrete
             return _mapper.Map<IList<Category>, IList<CategoryDto>>(categories);
         }
 
-        public Task<CategoryListDto> GetAllByActiveAsync()
+        public async Task<IList<CategoryDto>> GetAllByActiveAsync()
         {
-            throw new NotImplementedException();
+            var categories = await _unitOfWork.Categories.GetAllAsync(_=> _.Status == EntityStatus.Values.ACTIVE);
+            return _mapper.Map<IList<Category>, IList<CategoryDto>>(categories);
         }
 
-        public Task<CategoryDto> GetAsync(int categoryId)
+        public async Task<CategoryDto> GetAsync(int categoryId)
         {
-            throw new NotImplementedException();
+            var category = await _unitOfWork.Categories.GetById(categoryId);
+            return _mapper.Map<Category, CategoryDto>(category);
         }
 
-        public Task<CategoryUpdateDto> GetCategoryUpdateDtoAsync(int categoryId)
+        public async Task<CategoryDto> UpdateAsync(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<CategoryDto> UpdateAsync(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
-        {
-            throw new NotImplementedException();
+            var category = _mapper.Map<CategoryUpdateDto, Category>(categoryUpdateDto);
+            category.Modifier = modifiedByName;
+            var result = await _unitOfWork.Categories.UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<Category, CategoryDto>(result);
         }
     }
 }

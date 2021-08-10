@@ -11,13 +11,13 @@ namespace BlogApp.Shared.Services.Abstract
     public interface ICategoryService
     {
         Task<CategoryDto> GetAsync(int categoryId);
-        Task<CategoryUpdateDto> GetCategoryUpdateDtoAsync(int categoryId);
         Task<IList<CategoryDto>> GetAllAsync();
-        Task<CategoryListDto> GetAllByActiveAsync();
+        Task<IList<CategoryDto>> GetAllByActiveAsync();
     
         Task<CategoryDto> AddAsync(CategoryAddDto categoryAddDto,string createdByName);
         Task<CategoryDto> UpdateAsync(CategoryUpdateDto categoryUpdateDto, string modifiedByName);
         Task<CategoryDto> DeleteAsync(int categoryId, string modifiedByName);
         Task<int> CountAsync();
+        Task<int> CountByActiveAsync();
     }
 }
