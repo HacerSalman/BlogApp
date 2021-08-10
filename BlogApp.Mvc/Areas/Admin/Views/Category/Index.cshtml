@@ -1,0 +1,85 @@
+﻿
+@model IList<BlogApp.Data.Entities.Category>
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Categories";
+}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table mr-1"></i>
+        DataTable Example
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="categoriesTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+               
+                        <th>Create Time</th>
+                        <th>Update Time</th>
+                        <th>Owner</th>
+                        <th>Modifier</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+               
+                        <th>Create Time</th>
+                        <th>Update Time</th>
+                        <th>Owner</th>
+                        <th>Modifier</th>
+                    </tr>
+                </tfoot>
+            <tbody>
+                @foreach (var category in Model)
+                {
+                <tr>
+                    <td>
+                        @category.Id
+                    </td>
+                    <td>
+                        @category.Name
+                    </td>
+                    <td>
+                        @category.Description
+                    </td>
+                    <td>
+                        @category.Status
+                    </td>
+                
+                    <td>
+                        @category.CreateTime
+                    </td>
+                    <td>
+                        @category.UpdateTime
+                    </td>
+                    <td>
+                        @category.Owner
+                    </td>
+                    <td>
+                        @category.Modifier
+                    </td>              
+                </tr>
+                }
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#categoriesTable').DataTable();
+        });
+    </script>
+}
