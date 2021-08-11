@@ -18,7 +18,7 @@ namespace BlogApp.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var result =await  _categoryService.GetAllAsync();
-            return View(result);
+            return View(result.Data);
         }
     }
 }

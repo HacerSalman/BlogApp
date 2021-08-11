@@ -24,62 +24,88 @@ namespace BlogApp.Shared.Services.Concrete
             _mapper = mapper;
         }
 
-        public async Task<CategoryDto> AddAsync(CategoryAddDto categoryAddDto, string createdByName)
+        public async Task<IResponseDatat<CategoryDto>> AddAsync(CategoryAddDto categoryAddDto, string createdByName)
         {
             var category = _mapper.Map<CategoryAddDto, Category>(categoryAddDto);
             category.Modifier = createdByName;
             category.Owner = createdByName;
             var result = await _unitOfWork.Categories.AddAsync(category);
             await _unitOfWork.SaveAsync();
-            return _mapper.Map<Category, CategoryDto>(result);
+            var rs =   _mapper.Map<Category, CategoryDto>(result);
+            return new ResponseData<CategoryDto>(ResponseStatus.SUCCESS, rs);
         }
 
-        public async Task<int> CountAsync()
+        public async Task<IResponseDatat<int>> CountAsync()
         {
-            return await _unitOfWork.Categories.CountAsync();
+            var count = await _unitOfWork.Categories.CountAsync();
+            return new ResponseData<int>(ResponseStatus.SUCCESS, count);
         }
 
-        public async Task<int> CountByActiveAsync()
+        public async Task<IResponseDatat<int>> CountByActiveAsync()
         {
-            return await _unitOfWork.Categories.CountAsync(_ => _.Status == EntityStatus.Values.ACTIVE );
+            var count =  await _unitOfWork.Categories.CountAsync(_ => _.Status == EntityStatus.Values.ACTIVE );
+            return new ResponseData<int>(ResponseStatus.SUCCESS, count);
         }
 
 
-        public async Task<CategoryDto> DeleteAsync(int categoryId, string modifiedByName)
+        public async Task<IResponseDatat<CategoryDto>> DeleteAsync(int categoryId, string modifiedByName)
         {
-            var category = await _unitOfWork.Categories.GetById(categoryId);         
+            var category = await _unitOfWork.Categories.GetById(categoryId); 
+            if(category == null)
+                return new ResponseData<CategoryDto>(ResponseStatus.ERROR, message: "Category not found", data: null);
+
             category.Modifier = modifiedByName;
             category.Status = EntityStatus.Values.DELETED;
             var result = await _unitOfWork.Categories.UpdateAsync(category);
             await _unitOfWork.SaveAsync();
-            return _mapper.Map<Category, CategoryDto>(result);
+            var rs = _mapper.Map<Category, CategoryDto>(result);
+            return new ResponseData<CategoryDto>(ResponseStatus.SUCCESS, rs);
         }
 
-        public async Task<IList<CategoryDto>> GetAllAsync()
+        public async Task<IResponseDatat<IList<CategoryDto>>> GetAllAsync()
         {
             var categories = await _unitOfWork.Categories.GetAllAsync(null);
-            return _mapper.Map<IList<Category>, IList<CategoryDto>>(categories);
+            if (categories.Count > -1)
+            {
+                var result =  _mapper.Map<IList<Category>, IList<CategoryDto>>(categories);
+                return new ResponseData<IList<CategoryDto>>(ResponseStatus.SUCCESS, result);       
+            }
+            return new ResponseData<IList<CategoryDto>>(ResponseStatus.ERROR, message:"Category not found", data:null);
+           
         }
 
-        public async Task<IList<CategoryDto>> GetAllByActiveAsync()
+        public async Task<IResponseDatat<IList<CategoryDto>>> GetAllByActiveAsync()
         {
             var categories = await _unitOfWork.Categories.GetAllAsync(_=> _.Status == EntityStatus.Values.ACTIVE);
-            return _mapper.Map<IList<Category>, IList<CategoryDto>>(categories);
+            if (categories.Count > -1)
+            {
+                var result = _mapper.Map<IList<Category>, IList<CategoryDto>>(categories);
+                return new ResponseData<IList<CategoryDto>>(ResponseStatus.SUCCESS, result);
+            }
+            return new ResponseData<IList<CategoryDto>>(ResponseStatus.ERROR, message: "Not found any category", data: null);
+
         }
 
-        public async Task<CategoryDto> GetAsync(int categoryId)
+        public async Task<IResponseDatat<CategoryDto>> GetAsync(int categoryId)
         {
             var category = await _unitOfWork.Categories.GetById(categoryId);
-            return _mapper.Map<Category, CategoryDto>(category);
+            if (category == null)
+                return new ResponseData<CategoryDto>(ResponseStatus.ERROR, message: "Not found any category", data: null);
+            var result =  _mapper.Map<Category, CategoryDto>(category);
+            return new ResponseData<CategoryDto>(ResponseStatus.SUCCESS, result);
         }
 
-        public async Task<CategoryDto> UpdateAsync(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
+        public async Task<IResponseDatat<CategoryDto>> UpdateAsync(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
         {
             var category = _mapper.Map<CategoryUpdateDto, Category>(categoryUpdateDto);
+            if (category == null)
+                return new ResponseData<CategoryDto>(ResponseStatus.ERROR, message: "Category not found", data: null);
+
             category.Modifier = modifiedByName;
             var result = await _unitOfWork.Categories.UpdateAsync(category);
             await _unitOfWork.SaveAsync();
-            return _mapper.Map<Category, CategoryDto>(result);
+            var rs = _mapper.Map<Category, CategoryDto>(result);
+            return new ResponseData<CategoryDto>(ResponseStatus.SUCCESS, rs);
         }
     }
 }

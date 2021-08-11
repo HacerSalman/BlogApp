@@ -11,5 +11,7 @@ namespace BlogApp.Shared.Response
         T Data { get; }
         public string Message { get; }
         public Exception Exception { get; }
+
+        public ResponseStatus Status { get; }
     }
 }

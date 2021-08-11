@@ -41,22 +41,22 @@ namespace BlogApp.Shared.Services.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<ArticleListDto> GetAllAsync()
+        public Task<IList<ArticleDto>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<ArticleListDto> GetAllByCategoryAsync(int categoryId)
+        public Task<IList<ArticleDto>> GetAllByCategoryAsync(int categoryId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ArticleListDto> GetAllByNonDeletedAndActiveAsync()
+        public Task<IList<ArticleDto>> GetAllByNonDeletedAndActiveAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<ArticleListDto> GetAllByNonDeletedAsync()
+        public Task<IList<ArticleDto>> GetAllByNonDeletedAsync()
         {
             throw new NotImplementedException();
         }

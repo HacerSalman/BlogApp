@@ -8,23 +8,27 @@ namespace BlogApp.Shared.Response
 {
     public class ResponseData<T> : IResponseDatat<T>
     {
-        public ResponseData( T data)
+        public ResponseData(ResponseStatus status, T data)
         {
             Data = data;
+            Status = status;
         }
-        public ResponseData( string message, T data)
+        public ResponseData(ResponseStatus status,string message, T data)
         {
             Message = message;
             Data = data;
+            Status = status;
         }
-        public ResponseData( string message, T data, Exception exception)
+        public ResponseData(ResponseStatus status, string message, T data, Exception exception)
         {
             Message = message;
             Data = data;
             Exception = exception;
+            Status = status;
         }
         public string Message { get; }
         public Exception Exception { get; }
         public T Data { get; }
+        public ResponseStatus Status { get; }
     }
 }
