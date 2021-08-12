@@ -1,5 +1,5 @@
 # BlogApp
-Sample Blog using .Net 5, EF, Repository Pattern, UnitofWork, AutoMapper, Ajax, JQuery
+Sample Blog using .Net 5, EF, Repository Pattern, UnitofWork, AutoMapper, Ajax, JQuery, MySql, Mvc, Fluent Api
 
 ## Getting Started
 The solution contains 5 different projects. They are Api,Mvc,Data,Shared and Test.
@@ -20,4 +20,4 @@ thus becoming compatible with the dependencies inversion principle.Thanks to the
 principle is followed by using a separate method for each process.
 
 ## Used technologies
-.Net 5, EF, Repository Pattern, UnitofWork, AutoMapper, Ajax, JQuery, Nunit, Moq, MySql
+.Net 5, Entity Framework, Repository Pattern, UnitofWork, AutoMapper, Ajax, JQuery, Nunit, Moq, MySql, Mvc, Fluent Api, Asynchronous Programming
