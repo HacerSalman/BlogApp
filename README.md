@@ -21,3 +21,5 @@ principle is followed by using a separate method for each process.
 
 ## Used technologies
 .Net 5, Entity Framework, Repository Pattern, UnitofWork, AutoMapper, Ajax, JQuery, Nunit, Moq, MySql, Mvc, Fluent Api, Asynchronous Programming
+
+##Note: I haven't finished this project yet, it's under development
